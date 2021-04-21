@@ -6,20 +6,38 @@ const routes = [
     path: "/",
     name: "Home",
     component: Home,
-    redirect: "overview",
+    redirect: "dashboard",
     children: [
       {
-        path: "overview",
-        name: "overview",
-        component: () =>import("../views/Overview"),
+        path: "/",
+        name: "dashboard",
+        redirect: "overview",
+        component: () => import("../views/Dashboard"),
+        children: [
+          {
+            path: "overview",
+            name: "overview",
+            component: () => import("../views/Overview"),
+          },
+          {
+            path: "deposit",
+            name: "deposit",
+            component: () => import("../views/Deposit"),
+          },
+          {
+            path: "withdraw",
+            name: "withdraw",
+            component: () => import("../views/Withdraw"),
+          },
+        ],
       },
       {
         path: "user",
         name: "user",
-        component: () =>import("../views/User"),
+        component: () => import("../views/User"),
       },
     ],
-  }
+  },
 ];
 
 const router = createRouter({

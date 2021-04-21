@@ -4,7 +4,10 @@
     height="25"
     viewBox="0 0 30 30"
     fill="none"
-    :class="{ 'fill-current text-white': isActive,'fill-current text-gray-400 group-hover:text-white': !isActive }"
+    :class="{
+      'fill-current text-white': isActive,
+      'fill-current text-gray-400 group-hover:text-white': !isActive,
+    }"
     xmlns="http://www.w3.org/2000/svg"
   >
     <path
@@ -16,7 +19,12 @@
 export default {
   computed: {
     isActive: function () {
-      return this.$route.name === "overview";
+      return (
+        this.$route.name === "overview" ||
+        this.$route.name === "deposit" ||
+        this.$route.name === "withdraw" ||
+        this.$route.name === "transactions"
+      );
     },
   },
 };

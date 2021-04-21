@@ -23,12 +23,12 @@
       </div>
       <div>
         <router-link to="/overview">
-          <NavLink :isActive="route == 'overview'">
+          <NavLink :isActive="isHome">
             <HomeIcon />
           </NavLink>
         </router-link>
         <router-link to="/user">
-          <NavLink :isActive="route == 'user'">
+          <NavLink :isActive="!isHome">
             <User1 />
           </NavLink>
         </router-link>
@@ -48,8 +48,13 @@ import Logout from "@/assets/icons/Logout";
 
 export default {
   computed: {
-    route: function () {
-      return this.$route.name;
+    isHome: function () {
+      return (
+        this.$route.name === "overview" ||
+        this.$route.name === "deposit" ||
+        this.$route.name === "withdraw" ||
+        this.$route.name === "transactions"
+      );
     },
   },
   components: {
