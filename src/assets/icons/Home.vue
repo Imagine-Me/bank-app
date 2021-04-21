@@ -16,7 +16,7 @@
 export default {
   computed: {
     isActive: function () {
-      return this.$route.name === "Home";
+      return this.$route.name === "overview";
     },
   },
 };

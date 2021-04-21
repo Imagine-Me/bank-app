@@ -1,12 +1,16 @@
 <template>
   <div class="flex w-20 bg-white rounded-lg justify-center items-center">
     <div>
-      <NavLink :isActive="route == 'Home'">
-        <HomeIcon />
-      </NavLink>
-      <NavLink :isActive="route == 'Homea'">
-        <User1 />
-      </NavLink>
+      <router-link to="/overview">
+        <NavLink :isActive="route == 'overview'">
+          <HomeIcon />
+        </NavLink>
+      </router-link>
+      <router-link to="/user">
+        <NavLink :isActive="route == 'user'">
+          <User1 />
+        </NavLink>
+      </router-link>
       <NavLink>
         <Logout />
       </NavLink>

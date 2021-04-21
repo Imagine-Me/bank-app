@@ -1,7 +1,9 @@
 <template>
   <div class="h-full p-5 bg-secondary flex">
     <NavBar />
-    <div class="flex-1">Bonjour</div>
+    <div class="flex-1 px-3">
+      <router-view />
+    </div>
   </div>
 </template>
 

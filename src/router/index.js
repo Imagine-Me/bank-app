@@ -6,13 +6,20 @@ const routes = [
     path: "/",
     name: "Home",
     component: Home,
-  },
-  {
-    path: "/about",
-    name: "About",
-    component: () =>
-      import(/* webpackChunkName: "about" */ "../views/About.vue"),
-  },
+    redirect: "overview",
+    children: [
+      {
+        path: "overview",
+        name: "overview",
+        component: () =>import("../views/Overview"),
+      },
+      {
+        path: "user",
+        name: "user",
+        component: () =>import("../views/User"),
+      },
+    ],
+  }
 ];
 
 const router = createRouter({
