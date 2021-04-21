@@ -6,12 +6,37 @@ const routes = [
     path: "/",
     name: "Home",
     component: Home,
-  },
-  {
-    path: "/about",
-    name: "About",
-    component: () =>
-      import(/* webpackChunkName: "about" */ "../views/About.vue"),
+    redirect: "dashboard",
+    children: [
+      {
+        path: "/",
+        name: "dashboard",
+        redirect: "overview",
+        component: () => import("../views/Dashboard"),
+        children: [
+          {
+            path: "overview",
+            name: "overview",
+            component: () => import("../views/Overview"),
+          },
+          {
+            path: "deposit",
+            name: "deposit",
+            component: () => import("../views/Deposit"),
+          },
+          {
+            path: "withdraw",
+            name: "withdraw",
+            component: () => import("../views/Withdraw"),
+          },
+        ],
+      },
+      {
+        path: "user",
+        name: "user",
+        component: () => import("../views/User"),
+      },
+    ],
   },
 ];
 
