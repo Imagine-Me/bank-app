@@ -9,6 +9,13 @@ module.exports = {
       secondary: "#DBEEFF",
       danger: "#e3342f",
     }),
+    textColor: (theme) => ({
+      ...theme("colors"),
+      primary: "#0DB4FF",
+      secondary: "#DBEEFF",
+      danger: "#e3342f",
+      dark: "#FF4580"
+    }),
   },
   variants: {
     extend: {
