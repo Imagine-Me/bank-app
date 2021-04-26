@@ -1,10 +1,10 @@
 <template>
   <div class="flex justify-between item-center">
     <h3 class="text-3xl">
-        <slot></slot>
+      <slot></slot>
     </h3>
     <div class="flex items-center">
-      <div>John Doe</div>
+      <div>{{ name }}</div>
       <svg
         width="35"
         height="35"
@@ -24,3 +24,11 @@
     </div>
   </div>
 </template>
+<script>
+import { mapState } from "vuex";
+export default {
+  computed: {
+    ...mapState(["name"]),
+  },
+};
+</script>

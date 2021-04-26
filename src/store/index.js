@@ -1,31 +1,26 @@
 import { createStore } from "vuex";
 import firebase from "firebase";
 import { config } from "../firebase/config";
+// import router from "../router/index";
+
 export default createStore({
   state: {
     isAuthenticated: false,
     isLoading: true,
     firebase: null,
     uid: null,
-    name: "John Doe",
-    accountNo: "657334804425",
-    balance: 25000,
-    joinedDate: "12/2021",
+    name: "",
+    accountNo: "",
+    balance: 0,
+    joinedDate: "",
     recentTransctions: [
-      { date: "12-5-2021", type: "deposit", amount: 3000, balance: 20000 },
-      { date: "22-4-2021", type: "withdraw", amount: 20000, balance: 17000 },
-      { date: "03-4-2021", type: "deposit", amount: 10000, balance: 37000 },
-      { date: "29-3-2021", type: "withdraw", amount: 3000, balance: 27000 },
-      { date: "14-2 -2021", type: "withdraw", amount: 1000, balance: 30000 },
+      
     ],
     recentLoans: [],
   },
   getters: {
     isAuthenticated: (state) => {
       return state.isAuthenticated;
-    },
-    isLoading: (state) => {
-      return state.isLoading;
     },
   },
   mutations: {
@@ -38,8 +33,10 @@ export default createStore({
     addFirebase(state, { payload }) {
       state.firebase = payload;
     },
-    addUid(state, { payload }) {
-      state.uid = payload;
+    addUserDetails(state, { payload }) {
+      state.uid = payload.uid;
+      state.name = payload.name;
+      state.isAuthenticated = true;
     },
   },
   actions: {
@@ -49,7 +46,11 @@ export default createStore({
       firebase.auth().onAuthStateChanged(function (user) {
         if (user) {
           // User is signed in.
-          console.log("There is a user", user);
+          const userData = {
+            uid: user.uid,
+            name: user.displayName,
+          };
+          commit({ type: "addUserDetails", payload: userData });
         } else {
           // No user is signed in.
           console.log("there is no user");
@@ -76,19 +77,16 @@ export default createStore({
       firebase
         .auth()
         .createUserWithEmailAndPassword(email, password)
-        .then((userCredential) => {
-          // Signed in
-          const profileChangeRequest = userCredential.profileChangeRequest();
-          profileChangeRequest.displayName = name;
-          profileChangeRequest.commitChangesWithCompletion((err) => {
-            console.log(err);
-          });
+        .then((userCredential) =>
+          userCredential.user.updateProfile({
+            displayName: name,
+          })
+        )
+        .then(() => {
           commit({ type: "changeAuthState" });
-          // ...
         })
         .catch((error) => {
           console.log(error);
-          // ..
         });
     },
   },

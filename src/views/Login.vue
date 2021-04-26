@@ -54,6 +54,7 @@
   </div>
 </template>
 <script>
+import { mapState } from "vuex";
 export default {
   data() {
     return {
@@ -62,8 +63,13 @@ export default {
     };
   },
   computed: {
-    isLoading: function () {
-      return this.$store.getters.isLoading;
+    ...mapState(["isAuthenticated","isLoading"]),
+  },
+  watch: {
+    isAuthenticated: function (data) {
+      if (data) {
+        this.$router.push("overview")
+      }
     },
   },
   methods: {
