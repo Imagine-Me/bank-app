@@ -1,55 +1,50 @@
 import { createStore } from "vuex";
 import firebase from "firebase";
 import { config } from "../firebase/config";
+// import router from "../router/index";
+
 export default createStore({
   state: {
     isAuthenticated: false,
     isLoading: true,
     firebase: null,
     uid: null,
-    name: "John Doe",
-    accountNo: "657334804425",
-    balance: 25000,
-    joinedDate: "12/2021",
-    recentTransctions: [
-      { date: "12-5-2021", type: "deposit", amount: 3000, balance: 20000 },
-      { date: "22-4-2021", type: "withdraw", amount: 20000, balance: 17000 },
-      { date: "03-4-2021", type: "deposit", amount: 10000, balance: 37000 },
-      { date: "29-3-2021", type: "withdraw", amount: 3000, balance: 27000 },
-      { date: "14-2 -2021", type: "withdraw", amount: 1000, balance: 30000 },
-    ],
+    name: "",
+    accountNo: "",
+    balance: 0,
+    joinedDate: "",
+    recentTransctions: [],
     recentLoans: [],
   },
   getters: {
     isAuthenticated: (state) => {
       return state.isAuthenticated;
     },
-    isLoading: (state) => {
-      return state.isLoading;
-    },
   },
   mutations: {
-    changeAuthState(state) {
-      state.isAuthenticated = true;
-    },
     changeIsLoading(state) {
       state.isLoading = false;
     },
     addFirebase(state, { payload }) {
       state.firebase = payload;
     },
-    addUid(state, { payload }) {
-      state.uid = payload;
+    addUserDetails(state, { payload }) {
+      state.uid = payload.uid;
+      state.name = payload.name;
+      state.isAuthenticated = true;
     },
   },
   actions: {
     signIn({ commit }) {
-      console.log(config);
       firebase.initializeApp(config);
       firebase.auth().onAuthStateChanged(function (user) {
         if (user) {
           // User is signed in.
-          console.log("There is a user", user);
+          const userData = {
+            uid: user.uid,
+            name: user.displayName,
+          };
+          commit({ type: "addUserDetails", payload: userData });
         } else {
           // No user is signed in.
           console.log("there is no user");
@@ -58,37 +53,37 @@ export default createStore({
         commit({ type: "addFirebase", payload: firebase });
       });
     },
-    signInWithEmail({ commit }, { email, password }) {
+    signInWithEmail(_, { email, password }) {
       firebase
         .auth()
         .signInWithEmailAndPassword(email, password)
-        .then((userCredential) => {
-          // Signed in
-          var user = userCredential.user;
-          console.log(user, commit);
-          // ...
-        })
+        .then(() => {})
         .catch((error) => {
           console.log(error);
         });
     },
-    signUpWithEmail({ commit }, { email, password, name }) {
+    signUpWithEmail(_, { email, password, name }) {
       firebase
         .auth()
         .createUserWithEmailAndPassword(email, password)
         .then((userCredential) => {
-          // Signed in
-          const profileChangeRequest = userCredential.profileChangeRequest();
-          profileChangeRequest.displayName = name;
-          profileChangeRequest.commitChangesWithCompletion((err) => {
-            console.log(err);
+          userCredential.user.updateProfile({
+            displayName: name,
           });
-          commit({ type: "changeAuthState" });
-          // ...
+          return userCredential.user;
+        })
+        .then((user) => {
+          const database = firebase.database();
+          database.ref("users/" + user.uid).set({
+            balance: 0,
+            accountNo:
+              Math.floor(Math.random() * (99999999 - 11111111 + 1)) + 11111111,
+            joinedDate: new Date().toString(),
+            recentTransactions: [],
+          });
         })
         .catch((error) => {
           console.log(error);
-          // ..
         });
     },
   },
