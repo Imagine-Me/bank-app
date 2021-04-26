@@ -29,20 +29,22 @@
           type="email"
           class="w-full border mt-2 rounded p-2"
           placeholder="Enter Email"
-          :value="email"
+          v-model="email"
           required
         />
         <input
           type="password"
           class="w-full border mt-2 rounded p-2"
           placeholder="Enter Password"
-          :value="password"
+          v-model="password"
           required
         />
         <button
           type="submit"
           class="mt-3 block w-full rounded px-4 py-2 bg-primary text-white"
+          :disabled="loader"
         >
+          <Spinner v-if="loader" />
           Login
         </button>
         <p class="mt-2 text-center">
@@ -54,27 +56,23 @@
   </div>
 </template>
 <script>
-import { mapState } from "vuex";
+import { mapActions, mapState } from "vuex";
+import AuthMixinVue from "../mixins/AuthMixin.vue";
 export default {
+  mixins: [AuthMixinVue],
   data() {
     return {
-      email: "",
-      password: "",
+      error: "",
     };
   },
   computed: {
-    ...mapState(["isAuthenticated","isLoading"]),
-  },
-  watch: {
-    isAuthenticated: function (data) {
-      if (data) {
-        this.$router.push("overview")
-      }
-    },
+    ...mapState(["isLoading"]),
   },
   methods: {
+    ...mapActions(["signInWithEmail"]),
     login() {
-      console.log("FORM submitted");
+      this.loader = true;
+      this.signInWithEmail({ email: this.email, password: this.password });
     },
   },
 };

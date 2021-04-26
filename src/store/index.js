@@ -13,9 +13,7 @@ export default createStore({
     accountNo: "",
     balance: 0,
     joinedDate: "",
-    recentTransctions: [
-      
-    ],
+    recentTransctions: [],
     recentLoans: [],
   },
   getters: {
@@ -24,9 +22,6 @@ export default createStore({
     },
   },
   mutations: {
-    changeAuthState(state) {
-      state.isAuthenticated = true;
-    },
     changeIsLoading(state) {
       state.isLoading = false;
     },
@@ -41,7 +36,6 @@ export default createStore({
   },
   actions: {
     signIn({ commit }) {
-      console.log(config);
       firebase.initializeApp(config);
       firebase.auth().onAuthStateChanged(function (user) {
         if (user) {
@@ -59,31 +53,34 @@ export default createStore({
         commit({ type: "addFirebase", payload: firebase });
       });
     },
-    signInWithEmail({ commit }, { email, password }) {
+    signInWithEmail(_, { email, password }) {
       firebase
         .auth()
         .signInWithEmailAndPassword(email, password)
-        .then((userCredential) => {
-          // Signed in
-          var user = userCredential.user;
-          console.log(user, commit);
-          // ...
-        })
+        .then(() => {})
         .catch((error) => {
           console.log(error);
         });
     },
-    signUpWithEmail({ commit }, { email, password, name }) {
+    signUpWithEmail(_, { email, password, name }) {
       firebase
         .auth()
         .createUserWithEmailAndPassword(email, password)
-        .then((userCredential) =>
+        .then((userCredential) => {
           userCredential.user.updateProfile({
             displayName: name,
-          })
-        )
-        .then(() => {
-          commit({ type: "changeAuthState" });
+          });
+          return userCredential.user;
+        })
+        .then((user) => {
+          const database = firebase.database();
+          database.ref("users/" + user.uid).set({
+            balance: 0,
+            accountNo:
+              Math.floor(Math.random() * (99999999 - 11111111 + 1)) + 11111111,
+            joinedDate: new Date().toString(),
+            recentTransactions: [],
+          });
         })
         .catch((error) => {
           console.log(error);

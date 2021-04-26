@@ -38,20 +38,25 @@
           @click="signup"
           class="mt-3 block w-full rounded px-4 py-2 bg-primary text-white"
         >
+          <Spinner v-if="loader" />
           Login
         </button>
+        <p class="mt-2 text-center">
+          Already have account? Login
+          <router-link class="text-blue-500" to="/login">here</router-link>
+        </p>
       </form>
     </div>
   </div>
 </template>
 <script>
 import { mapActions } from "vuex";
+import AuthMixinVue from "../mixins/AuthMixin.vue";
 export default {
+  mixins: [AuthMixinVue],
   data() {
     return {
       name: "",
-      email: "",
-      password: "",
       password1: "",
       errors: {
         passwordMismatch: false,
@@ -67,6 +72,7 @@ export default {
         this.errors = errors;
         return;
       }
+      this.loader = true;
       this.signUpWithEmail({
         email: this.email,
         password: this.password,
