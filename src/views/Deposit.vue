@@ -12,7 +12,7 @@
           Deposit
         </button>
         <router-link
-          to="/"
+          to="/overview"
           tag="button"
           class="float-right rounded px-4 py-2 bg-gray-500 mr-2 text-white"
           >Cancel</router-link

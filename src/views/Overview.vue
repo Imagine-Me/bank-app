@@ -2,9 +2,18 @@
   <div class="grid grid-cols-3 grid-rows-1 gap-6 mt-5">
     <Card>
       <h4 class="text-lg font-medium">Account</h4>
-      <h3 class="text-2xl mt-2 text-primary">₹{{ balance }}</h3>
+      <div
+        v-if="dataLoading"
+        class="rounded bg-gray-300 animate-pusle w-16 h-4"
+      ></div>
+      <h3 v-else class="text-2xl mt-2 text-primary">₹{{ balance }}</h3>
       <div class="flex justify-around mt-2">
         <div
+          v-if="dataLoading"
+          class="rounded bg-gray-300 animate-pusle w-full h-4"
+        ></div>
+        <div
+          v-else
           class="text-xl font-thin"
           v-for="letter in accountNo"
           :key="'account_number_' + letter"
@@ -17,7 +26,11 @@
         class="absolute inset-x-0 bottom-0 p-3 flex justify-between text-sm text-gray-500"
       >
         <div>{{ name }}</div>
-        <div>{{ joinedDate }}</div>
+        <div
+          v-if="dataLoading"
+          class="rounded bg-gray-300 animate-pusle w-12"
+        ></div>
+        <div v-else>{{ joinedDate }}</div>
       </div>
     </Card>
     <Card>
@@ -97,6 +110,23 @@
           </tr>
         </tbody>
       </table>
+      <div
+        v-if="dataLoading"
+        class="rounded bg-gray-300 animate-pusle w-full h-4"
+      ></div>
+      <div
+        v-if="dataLoading"
+        class="rounded bg-gray-300 animate-pusle w-full h-4 mt-2"
+      ></div>
+      <div
+        v-if="dataLoading"
+        class="rounded bg-gray-300 animate-pusle w-full h-4 mt-2"
+      ></div>
+      <div
+        v-if="dataLoading"
+        class="rounded bg-gray-300 animate-pusle w-full h-4 mt-2"
+      ></div>
+      <div v-else-if="recentTransctions.length == 0" >No data available</div>
     </Card>
     <Card>
       <h4 class="text-lg font-medium">Loans</h4>
@@ -105,7 +135,7 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
+import { mapActions, mapState } from "vuex";
 import Card from "../components/Card";
 
 export default {
@@ -120,7 +150,16 @@ export default {
       "joinedDate",
       "recentTransctions",
       "recentLoans",
+      "firebase",
+      "uid",
+      "dataLoading",
     ]),
+  },
+  mounted() {
+    this.getOverView();
+  },
+  methods: {
+    ...mapActions(["getOverView"]),
   },
 };
 </script>

@@ -15,6 +15,7 @@ export default createStore({
     joinedDate: "",
     recentTransctions: [],
     recentLoans: [],
+    dataLoading: true,
   },
   getters: {
     isAuthenticated: (state) => {
@@ -37,6 +38,19 @@ export default createStore({
       state.uid = null;
       state.name = null;
       state.isAuthenticated = false;
+    },
+    addAccountDetails(state, { payload }) {
+      const joinedDate = new Date(payload.joinedDate);
+      state.joinedDate = joinedDate.getMonth() + "/" + joinedDate.getFullYear();
+      state.accountNo = "" + payload.accountNo;
+      state.balance = payload.balance;
+      if (Array.isArray(payload.recentTransctions)) {
+        state.recentTransctions = payload.recentTransactions;
+      }
+      state.dataLoading = false;
+    },
+    loadingData(state) {
+      state.dataLoading = true;
     },
   },
   actions: {
@@ -99,6 +113,23 @@ export default createStore({
         .catch((error) => {
           console.log(error);
         });
+    },
+    getOverView({ state, commit }) {
+      commit("loadingData");
+      const databaseRef = firebase
+        .database()
+        .ref()
+        .child("users")
+        .child(state.uid);
+      databaseRef
+        .get()
+        .then((snapshot) => {
+          if (snapshot.exists()) {
+            const newData = snapshot.val();
+            commit({ type: "addAccountDetails", payload: newData });
+          }
+        })
+        .catch((err) => console.log(err));
     },
   },
   modules: {},
