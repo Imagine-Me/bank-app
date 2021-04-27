@@ -33,6 +33,11 @@ export default createStore({
       state.name = payload.name;
       state.isAuthenticated = true;
     },
+    removeUserDetails(state) {
+      state.uid = null;
+      state.name = null;
+      state.isAuthenticated = false;
+    },
   },
   actions: {
     signIn({ commit }) {
@@ -47,7 +52,7 @@ export default createStore({
           commit({ type: "addUserDetails", payload: userData });
         } else {
           // No user is signed in.
-          console.log("there is no user");
+          commit({ type: "removeUserDetails" });
         }
         commit("changeIsLoading");
         commit({ type: "addFirebase", payload: firebase });
@@ -82,6 +87,15 @@ export default createStore({
             recentTransactions: [],
           });
         })
+        .catch((error) => {
+          console.log(error);
+        });
+    },
+    logoutUser({ commit }) {
+      firebase
+        .auth()
+        .signOut()
+        .then(() => commit({ type: "removeUserDetails" }))
         .catch((error) => {
           console.log(error);
         });
