@@ -90,7 +90,7 @@
         </thead>
         <tbody>
           <tr
-            v-for="(transaction, index) in recentTransctions"
+            v-for="(transaction, index) in transactions"
             :key="'transaction_' + index"
           >
             <td class="py-2">{{ transaction.date }}</td>
@@ -154,6 +154,16 @@ export default {
       "uid",
       "dataLoading",
     ]),
+    transactions: function () {
+      const keys = Object.keys(this.recentTransctions);
+      const result = [];
+      keys.reverse().forEach((v, i) => {
+        if (i < 5) {
+          result.push(this.recentTransctions[v]);
+        }
+      });
+      return result;
+    },
   },
   mounted() {
     this.getOverView();
