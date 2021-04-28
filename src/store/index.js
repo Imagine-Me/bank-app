@@ -13,7 +13,7 @@ export default createStore({
     accountNo: "",
     balance: 0,
     joinedDate: "",
-    recentTransctions: [],
+    recentTransctions: {},
     recentLoans: [],
     dataLoading: true,
   },
@@ -44,9 +44,7 @@ export default createStore({
       state.joinedDate = joinedDate.getMonth() + "/" + joinedDate.getFullYear();
       state.accountNo = "" + payload.accountNo;
       state.balance = payload.balance;
-      if (Array.isArray(payload.recentTransctions)) {
-        state.recentTransctions = payload.recentTransactions;
-      }
+      state.recentTransctions = payload.recentTransactions;
       state.dataLoading = false;
     },
     loadingData(state) {
@@ -130,6 +128,24 @@ export default createStore({
           }
         })
         .catch((err) => console.log(err));
+    },
+    updateBalance({ state }, balance) {
+      const databaseRef = firebase
+        .database()
+        .ref()
+        .child("users")
+        .child(state.uid);
+      databaseRef.update({ balance });
+    },
+    updateTransactions({ state }, data) {
+      console.log("updating transactions");
+      const databaseRef = firebase
+        .database()
+        .ref()
+        .child("users")
+        .child(state.uid)
+        .child("recentTransactions");
+      databaseRef.push(data);
     },
   },
   modules: {},

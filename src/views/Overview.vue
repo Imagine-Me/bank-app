@@ -126,7 +126,7 @@
         v-if="dataLoading"
         class="rounded bg-gray-300 animate-pusle w-full h-4 mt-2"
       ></div>
-      <div v-else-if="recentTransctions.length == 0">No data available</div>
+      <div v-else-if="!recentTransctions">No data available</div>
     </Card>
     <Card>
       <h4 class="text-lg font-medium">Loans</h4>
