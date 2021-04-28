@@ -2,9 +2,12 @@
   <div class="mt-8 m-auto max-w-lg bg-white p-4 rounded-lg pb-16">
     <form @submit.prevent="formSubmission">
       <label for="">Enter Amount</label>
+      <p v-if="error" class="text-red-600">
+        Amount should be greater than zero
+      </p>
       <input
         type="number"
-        :value="amount"
+        v-model="amount"
         class="w-full border mt-2 rounded p-3"
       />
       <div class="mt-2">
@@ -12,7 +15,7 @@
           Deposit
         </button>
         <router-link
-          to="/"
+          to="/overview"
           tag="button"
           class="float-right rounded px-4 py-2 bg-gray-500 mr-2 text-white"
           >Cancel</router-link
@@ -28,7 +31,20 @@ export default {
   mixins: [MoneyHandler],
   methods: {
     formSubmission() {
-      console.log("Form submitted", this.amount);
+      if (this.amount <= 0) {
+        this.error = true;
+        return;
+      }
+      const data = {
+        amount: this.amount,
+        type: "deposit",
+        balance: this.balance,
+        date: new Date().getMonth() + "/" + new Date().getFullYear(),
+      };
+      const newBalance = parseInt(this.balance) + parseInt(this.amount);
+      this.updateBalance(newBalance)
+        .then(() => this.updateTransactions(data))
+        .then(() => this.$router.push("/overview"));
     },
   },
 };

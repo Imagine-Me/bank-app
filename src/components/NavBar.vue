@@ -32,12 +32,32 @@
             <User1 />
           </NavLink>
         </router-link>
-        <NavLink>
+        <NavLink @click="isModelVisible = true">
           <Logout />
         </NavLink>
       </div>
     </div>
   </div>
+  <Backdrop v-if="isModelVisible">
+    <div class="bg-white rounded p-3 text-sm">
+      <h4 class="text-xl">Logout</h4>
+      <p>Are you sure you want to logout?</p>
+      <div class="text-center mt-2">
+        <button
+          @click="isModelVisible = false"
+          class="rounded bg-gray-300 py-1 px-2"
+        >
+          Cancel
+        </button>
+        <button
+          @click="logoutUser"
+          class="rounded bg-red-700 ml-2 text-white py-1 px-2"
+        >
+          Logout
+        </button>
+      </div>
+    </div>
+  </Backdrop>
 </template>
 
 <script>
@@ -45,8 +65,15 @@ import NavLink from "./NavLinks/NavLink";
 import HomeIcon from "@/assets/icons/Home";
 import User1 from "@/assets/icons/User1";
 import Logout from "@/assets/icons/Logout";
+import Backdrop from "@/components/Backdrop";
+import { mapActions, mapState } from "vuex";
 
 export default {
+  data() {
+    return {
+      isModelVisible: false,
+    };
+  },
   computed: {
     isHome: function () {
       return (
@@ -56,12 +83,24 @@ export default {
         this.$route.name === "transactions"
       );
     },
+    ...mapState(["isAuthenticated"]),
+  },
+  watch: {
+    isAuthenticated: function (val) {
+      if (!val) {
+        this.$router.push("/login");
+      }
+    },
   },
   components: {
     NavLink,
     HomeIcon,
     User1,
     Logout,
+    Backdrop,
+  },
+  methods: {
+    ...mapActions(["logoutUser"]),
   },
 };
 </script>

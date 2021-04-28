@@ -13,8 +13,9 @@ export default createStore({
     accountNo: "",
     balance: 0,
     joinedDate: "",
-    recentTransctions: [],
+    recentTransctions: {},
     recentLoans: [],
+    dataLoading: true,
   },
   getters: {
     isAuthenticated: (state) => {
@@ -33,6 +34,22 @@ export default createStore({
       state.name = payload.name;
       state.isAuthenticated = true;
     },
+    removeUserDetails(state) {
+      state.uid = null;
+      state.name = null;
+      state.isAuthenticated = false;
+    },
+    addAccountDetails(state, { payload }) {
+      const joinedDate = new Date(payload.joinedDate);
+      state.joinedDate = joinedDate.getMonth() + "/" + joinedDate.getFullYear();
+      state.accountNo = "" + payload.accountNo;
+      state.balance = payload.balance;
+      state.recentTransctions = payload.recentTransactions;
+      state.dataLoading = false;
+    },
+    loadingData(state) {
+      state.dataLoading = true;
+    },
   },
   actions: {
     signIn({ commit }) {
@@ -47,7 +64,7 @@ export default createStore({
           commit({ type: "addUserDetails", payload: userData });
         } else {
           // No user is signed in.
-          console.log("there is no user");
+          commit({ type: "removeUserDetails" });
         }
         commit("changeIsLoading");
         commit({ type: "addFirebase", payload: firebase });
@@ -85,6 +102,50 @@ export default createStore({
         .catch((error) => {
           console.log(error);
         });
+    },
+    logoutUser({ commit }) {
+      firebase
+        .auth()
+        .signOut()
+        .then(() => commit({ type: "removeUserDetails" }))
+        .catch((error) => {
+          console.log(error);
+        });
+    },
+    getOverView({ state, commit }) {
+      commit("loadingData");
+      const databaseRef = firebase
+        .database()
+        .ref()
+        .child("users")
+        .child(state.uid);
+      databaseRef
+        .get()
+        .then((snapshot) => {
+          if (snapshot.exists()) {
+            const newData = snapshot.val();
+            commit({ type: "addAccountDetails", payload: newData });
+          }
+        })
+        .catch((err) => console.log(err));
+    },
+    updateBalance({ state }, balance) {
+      const databaseRef = firebase
+        .database()
+        .ref()
+        .child("users")
+        .child(state.uid);
+      databaseRef.update({ balance });
+    },
+    updateTransactions({ state }, data) {
+      console.log("updating transactions");
+      const databaseRef = firebase
+        .database()
+        .ref()
+        .child("users")
+        .child(state.uid)
+        .child("recentTransactions");
+      databaseRef.push(data);
     },
   },
   modules: {},
