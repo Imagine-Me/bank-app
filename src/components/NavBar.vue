@@ -1,9 +1,9 @@
 <template>
-  <div class="w-20">
+  <div class="w-0 md:w-20">
     <div
-      class="flex w-20 bg-white rounded-lg justify-center items-center fixed inset-y-5"
+      class="flex bg-white -inset-x-0 bottom-0 rounded-lg justify-center items-center fixed md:inset-y-5 md:w-20 md:left-5"
     >
-      <div class="absolute top-3">
+      <div class="hidden md:block absolute top-3">
         <svg
           width="60"
           height="60"
@@ -21,18 +21,18 @@
           />
         </svg>
       </div>
-      <div>
-        <router-link to="/overview">
+      <div class="flex md:flex-col">
+        <router-link to="/overview" class="mx-1">
           <NavLink :isActive="isHome">
             <HomeIcon />
           </NavLink>
         </router-link>
-        <router-link to="/user">
+        <router-link to="/user" class="mx-1">
           <NavLink :isActive="!isHome">
             <User1 />
           </NavLink>
         </router-link>
-        <NavLink @click="isModelVisible = true">
+        <NavLink @click="isModelVisible = true" class="mx-1">
           <Logout />
         </NavLink>
       </div>
