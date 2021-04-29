@@ -1,7 +1,7 @@
 <template>
   <div class="w-0 md:w-20">
     <div
-      class="flex bg-white -inset-x-0 bottom-0 rounded-lg justify-center items-center fixed md:inset-y-5 md:w-20 md:left-5"
+      class="flex bg-white -inset-x-0 bottom-0 rounded-lg justify-center items-center fixed md:inset-y-5 md:w-20 md:left-5 z-40"
     >
       <div class="hidden md:block absolute top-3">
         <svg
