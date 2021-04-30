@@ -19,7 +19,7 @@
 export default {
   computed: {
     isActive: function () {
-      return this.$route.name === "something";
+      return this.$route.name === "user";
     },
   },
 };

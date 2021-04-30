@@ -1,5 +1,7 @@
 <template>
-  <div class="grid grid-cols-3 grid-rows-1 gap-6 mt-5">
+  <div
+    class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 grid-rows-1 gap-6 mt-5"
+  >
     <Card>
       <h4 class="text-lg font-medium">Account</h4>
       <div
@@ -76,7 +78,7 @@
       </router-link>
     </Card>
   </div>
-  <div class="grid grid-cols-2 grid-rows-1 gap-6 mt-5">
+  <div class="grid grid-cols-1 md:grid-cols-2 grid-rows-1 gap-6 mt-5">
     <Card>
       <h4 class="text-lg font-medium">Transactions</h4>
       <table class="table-auto w-full mt-4">
@@ -128,7 +130,7 @@
       ></div>
       <div v-else-if="!recentTransctions">No data available</div>
     </Card>
-    <Card>
+    <Card class="mb-20 md:mb-0">
       <h4 class="text-lg font-medium">Loans</h4>
     </Card>
   </div>
