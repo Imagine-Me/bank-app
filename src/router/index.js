@@ -39,6 +39,11 @@ const routes = [
             name: "withdraw",
             component: () => import("../views/Withdraw"),
           },
+          {
+            path: "transaction",
+            name: "transaction",
+            component: () => import("../views/Transaction"),
+          },
         ],
       },
       {

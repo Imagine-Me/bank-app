@@ -80,55 +80,57 @@
   </div>
   <div class="grid grid-cols-1 md:grid-cols-2 grid-rows-1 gap-6 mt-5">
     <Card>
-      <h4 class="text-lg font-medium">Transactions</h4>
-      <table class="table-auto w-full mt-4">
-        <thead class="text-left">
-          <tr>
-            <th>Date</th>
-            <th>Type</th>
-            <th>Amount</th>
-            <th>Balance</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr
-            v-for="(transaction, index) in transactions"
-            :key="'transaction_' + index"
-          >
-            <td class="py-2">{{ transaction.date }}</td>
-            <td>
-              <div
-                class="rounded-lg capitalize text-center w-20 text-white p-1 text-sm"
-                :class="{
-                  'bg-red-500': transaction.type == 'withdraw',
-                  'bg-green-500': transaction.type == 'deposit',
-                }"
-              >
-                {{ transaction.type }}
-              </div>
-            </td>
-            <td>{{ transaction.amount }}</td>
-            <td>{{ transaction.balance }}</td>
-          </tr>
-        </tbody>
-      </table>
-      <div
-        v-if="dataLoading"
-        class="rounded bg-gray-300 animate-pusle w-full h-4"
-      ></div>
-      <div
-        v-if="dataLoading"
-        class="rounded bg-gray-300 animate-pusle w-full h-4 mt-2"
-      ></div>
-      <div
-        v-if="dataLoading"
-        class="rounded bg-gray-300 animate-pusle w-full h-4 mt-2"
-      ></div>
-      <div
-        v-if="dataLoading"
-        class="rounded bg-gray-300 animate-pusle w-full h-4 mt-2"
-      ></div>
-      <div v-else-if="!recentTransctions">No data available</div>
+      <router-link class="h-full block" to="transaction">
+        <h4 class="text-lg font-medium">Transactions</h4>
+        <table class="table-auto w-full mt-4">
+          <thead class="text-left">
+            <tr>
+              <th>Date</th>
+              <th>Type</th>
+              <th>Amount</th>
+              <th>Balance</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr
+              v-for="(transaction, index) in transactions"
+              :key="'transaction_' + index"
+            >
+              <td class="py-2">{{ transaction.date }}</td>
+              <td>
+                <div
+                  class="rounded-lg capitalize text-center w-20 text-white p-1 text-sm"
+                  :class="{
+                    'bg-red-500': transaction.type == 'withdraw',
+                    'bg-green-500': transaction.type == 'deposit',
+                  }"
+                >
+                  {{ transaction.type }}
+                </div>
+              </td>
+              <td>{{ transaction.amount }}</td>
+              <td>{{ transaction.balance }}</td>
+            </tr>
+          </tbody>
+        </table>
+        <div
+          v-if="dataLoading"
+          class="rounded bg-gray-300 animate-pusle w-full h-4"
+        ></div>
+        <div
+          v-if="dataLoading"
+          class="rounded bg-gray-300 animate-pusle w-full h-4 mt-2"
+        ></div>
+        <div
+          v-if="dataLoading"
+          class="rounded bg-gray-300 animate-pusle w-full h-4 mt-2"
+        ></div>
+        <div
+          v-if="dataLoading"
+          class="rounded bg-gray-300 animate-pusle w-full h-4 mt-2"
+        ></div>
+        <div v-else-if="!recentTransctions">No data available</div>
+      </router-link>
     </Card>
     <Card class="mb-20 md:mb-0">
       <h4 class="text-lg font-medium">Loans</h4>
