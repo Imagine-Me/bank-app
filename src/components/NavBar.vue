@@ -80,7 +80,7 @@ export default {
         this.$route.name === "overview" ||
         this.$route.name === "deposit" ||
         this.$route.name === "withdraw" ||
-        this.$route.name === "transactions"
+        this.$route.name === "transaction"
       );
     },
     ...mapState(["isAuthenticated"]),
